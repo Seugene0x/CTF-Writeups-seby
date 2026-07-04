@@ -42,13 +42,6 @@ This website is designed to:
 - **High severity**: #f85149
 - **Solved/Low**: #3fb950
 
-### Netlify
-
-1. Push this repository to GitHub
-2. Connect to Netlify via GitHub integration
-3. Netlify will automatically deploy the site
-4. Configure custom domain: seby0x.dev
-
 ### Manual Deployment
 
 1. Go to [Netlify Drop](https://app.netlify.com/drop)
