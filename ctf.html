@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CTF Writeups - seby0x.dev</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <nav>
+    <div class="container nav-content">
+      <a href="index.html" class="brand">
+        <span class="sby">sby</span><span class="hex">0x</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="ctf.html" class="active">CTF</a>
+        <a href="research.html">Research</a>
+        <a href="about.html">About</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section">
+    <div class="container">
+      <h1 class="section-title">CTF Writeups</h1>
+      
+      <input type="text" class="search-bar" placeholder="Search writeups..." id="searchBar">
+      
+      <div class="filters">
+        <button class="filter-btn active" data-filter="all">All Platforms</button>
+        <button class="filter-btn" data-filter="hackthebox">HackTheBox</button>
+        <button class="filter-btn" data-filter="tryhackme">TryHackMe</button>
+        <button class="filter-btn" data-filter="picoctf">PicoCTF</button>
+        <button class="filter-btn" data-filter="ctftime">CTFtime</button>
+      </div>
+      
+      <div class="filters">
+        <button class="filter-btn active" data-difficulty="all">All Difficulties</button>
+        <button class="filter-btn" data-difficulty="easy">Easy</button>
+        <button class="filter-btn" data-difficulty="medium">Medium</button>
+        <button class="filter-btn" data-difficulty="hard">Hard</button>
+        <button class="filter-btn" data-difficulty="insane">Insane</button>
+      </div>
+      
+      <div class="card-grid" id="ctfGrid">
+        <a href="ctf/example-ctf.html" class="card" data-platform="hackthebox" data-difficulty="medium">
+          <h3 class="card-title">Example CTF Challenge</h3>
+          <p class="card-description">A sample CTF writeup demonstrating the template structure</p>
+          <div class="card-meta">
+            <span class="badge badge-cyan">HackTheBox</span>
+            <span class="badge badge-green">Medium</span>
+          </div>
+        </a>
+        <a href="#" class="card" data-platform="tryhackme" data-difficulty="easy">
+          <h3 class="card-title">Buffer Overflow Basics</h3>
+          <p class="card-description">Introduction to stack-based buffer overflow exploitation</p>
+          <div class="card-meta">
+            <span class="badge badge-cyan">TryHackMe</span>
+            <span class="badge badge-green">Easy</span>
+          </div>
+        </a>
+        <a href="#" class="card" data-platform="hackthebox" data-difficulty="hard">
+          <h3 class="card-title">Advanced Web Exploitation</h3>
+          <p class="card-description">Complex XSS and SQL injection chain in a real-world scenario</p>
+          <div class="card-meta">
+            <span class="badge badge-cyan">HackTheBox</span>
+            <span class="badge badge-red">Hard</span>
+          </div>
+        </a>
+        <a href="#" class="card" data-platform="picoctf" data-difficulty="easy">
+          <h3 class="card-title">Cryptography 101</h3>
+          <p class="card-description">Basic cryptographic attacks and frequency analysis</p>
+          <div class="card-meta">
+            <span class="badge badge-cyan">PicoCTF</span>
+            <span class="badge badge-green">Easy</span>
+          </div>
+        </a>
+        <a href="#" class="card" data-platform="ctftime" data-difficulty="insane">
+          <h3 class="card-title">Kernel Pwn Challenge</h3>
+          <p class="card-description">Linux kernel exploitation with race conditions</p>
+          <div class="card-meta">
+            <span class="badge badge-cyan">CTFtime</span>
+            <span class="badge badge-red">Insane</span>
+          </div>
+        </a>
+        <a href="#" class="card" data-platform="tryhackme" data-difficulty="medium">
+          <h3 class="card-title">Active Directory Attacks</h3>
+          <p class="card-description">Kerberoasting, Golden Ticket, and AD enumeration</p>
+          <div class="card-meta">
+            <span class="badge badge-cyan">TryHackMe</span>
+            <span class="badge badge-green">Medium</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const searchBar = document.getElementById('searchBar');
+    const ctfGrid = document.getElementById('ctfGrid');
+    const platformFilters = document.querySelectorAll('[data-filter]');
+    const difficultyFilters = document.querySelectorAll('[data-difficulty]');
+    
+    let currentPlatform = 'all';
+    let currentDifficulty = 'all';
+    
+    platformFilters.forEach(btn => {
+      btn.addEventListener('click', () => {
+        platformFilters.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentPlatform = btn.dataset.filter;
+        filterCards();
+      });
+    });
+    
+    difficultyFilters.forEach(btn => {
+      btn.addEventListener('click', () => {
+        difficultyFilters.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentDifficulty = btn.dataset.difficulty;
+        filterCards();
+      });
+    });
+    
+    searchBar.addEventListener('input', filterCards);
+    
+    function filterCards() {
+      const searchTerm = searchBar.value.toLowerCase();
+      const cards = ctfGrid.querySelectorAll('.card');
+      
+      cards.forEach(card => {
+        const platform = card.dataset.platform;
+        const difficulty = card.dataset.difficulty;
+        const title = card.querySelector('.card-title').textContent.toLowerCase();
+        const description = card.querySelector('.card-description').textContent.toLowerCase();
+        
+        const matchesPlatform = currentPlatform === 'all' || platform === currentPlatform;
+        const matchesDifficulty = currentDifficulty === 'all' || difficulty === currentDifficulty;
+        const matchesSearch = title.includes(searchTerm) || description.includes(searchTerm);
+        
+        card.style.display = matchesPlatform && matchesDifficulty && matchesSearch ? 'block' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>
