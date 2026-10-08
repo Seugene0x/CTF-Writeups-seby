@@ -43,7 +43,4 @@ This website is designed to:
 - **Solved/Low**: #3fb950
 
 ### Manual Deployment
-
-1. Go to [Netlify Drop](https://app.netlify.com/drop)
-2. Drag and drop the project folder
-3. Your site will be live instantly
+1.[Netlify Drop](https://app.netlify.com/drop)
