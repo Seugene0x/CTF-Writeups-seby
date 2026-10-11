@@ -24,7 +24,7 @@
   <section class="section">
     <div class="container">
       <h1 class="section-title">Security Research</h1>
-      <p style="color: var(--text-secondary); margin-bottom: 2rem;">Vulnerability findings and security research disclosures</p>
+      <p class="page-intro">Vulnerability findings and security research disclosures</p>
       
       <input type="text" class="search-bar" placeholder="Search findings..." id="searchBar">
       
@@ -95,39 +95,6 @@
     </div>
   </section>
 
-  <script>
-    const searchBar = document.getElementById('searchBar');
-    const researchGrid = document.getElementById('researchGrid');
-    const severityFilters = document.querySelectorAll('[data-severity]');
-    
-    let currentSeverity = 'all';
-    
-    severityFilters.forEach(btn => {
-      btn.addEventListener('click', () => {
-        severityFilters.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentSeverity = btn.dataset.severity;
-        filterCards();
-      });
-    });
-    
-    searchBar.addEventListener('input', filterCards);
-    
-    function filterCards() {
-      const searchTerm = searchBar.value.toLowerCase();
-      const cards = researchGrid.querySelectorAll('.card');
-      
-      cards.forEach(card => {
-        const severity = card.dataset.severity;
-        const title = card.querySelector('.card-title').textContent.toLowerCase();
-        const description = card.querySelector('.card-description').textContent.toLowerCase();
-        
-        const matchesSeverity = currentSeverity === 'all' || severity === currentSeverity;
-        const matchesSearch = title.includes(searchTerm) || description.includes(searchTerm);
-        
-        card.style.display = matchesSeverity && matchesSearch ? 'block' : 'none';
-      });
-    }
-  </script>
+  <script src="js/research.js"></script>
 </body>
 </html>

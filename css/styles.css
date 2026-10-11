@@ -6,6 +6,9 @@
   --accent-cyan: #00c8ff;
   --severity-high: #f85149;
   --severity-low: #3fb950;
+  --severity-orange: #f0883e;
+  --severity-yellow: #d29922;
+  --severity-blue: #58a6ff;
   --text-primary: #ffffff;
   --text-secondary: #8b949e;
   --border-color: #30363d;
@@ -120,6 +123,11 @@ nav {
   color: var(--text-primary);
 }
 
+.page-intro {
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -185,6 +193,21 @@ nav {
 .badge-gray {
   background-color: rgba(139, 148, 158, 0.15);
   color: var(--text-secondary);
+}
+
+.badge-orange {
+  background-color: rgba(240, 136, 62, 0.15);
+  color: var(--severity-orange);
+}
+
+.badge-yellow {
+  background-color: rgba(210, 153, 34, 0.15);
+  color: var(--severity-yellow);
+}
+
+.badge-blue {
+  background-color: rgba(88, 166, 255, 0.15);
+  color: var(--severity-blue);
 }
 
 .filters {
@@ -377,6 +400,160 @@ nav {
   margin-bottom: 0.5rem;
 }
 
+.remediation-box p,
+.remediation-box li {
+  color: var(--text-secondary);
+}
+
+.remediation-box ul {
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.writeup-subtitle {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.overview-item {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+}
+
+.overview-label {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--accent-cyan);
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.overview-item p {
+  margin-bottom: 0;
+}
+
+.severity-summary {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.finding-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--text-secondary);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.finding-card.critical { border-left-color: var(--severity-high); }
+.finding-card.high { border-left-color: var(--severity-orange); }
+.finding-card.medium { border-left-color: var(--severity-yellow); }
+.finding-card.low { border-left-color: var(--severity-blue); }
+
+.finding-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.finding-id {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--accent-cyan);
+}
+
+.finding-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.finding-field {
+  margin-bottom: 1rem;
+}
+
+.finding-field:last-child {
+  margin-bottom: 0;
+}
+
+.finding-label {
+  display: block;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.writeup-section .finding-field p,
+.finding-field p {
+  margin-bottom: 0.5rem;
+}
+
+.finding-field ul {
+  margin-bottom: 0.5rem;
+}
+
+.output-block {
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  margin: 0.5rem 0;
+  overflow-x: auto;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.finding-card .code-block {
+  background-color: var(--bg-primary);
+  padding: 1rem 1.5rem;
+  margin: 0.5rem 0;
+}
+
+.lessons-list {
+  counter-reset: lesson;
+  list-style: none;
+}
+
+.writeup-section .lessons-list {
+  margin-left: 0;
+}
+
+.lessons-list li {
+  counter-increment: lesson;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.lessons-list li::before {
+  content: counter(lesson, decimal-leading-zero);
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--accent-cyan);
+  margin-right: 0.75rem;
+}
+
+.lessons-list strong {
+  color: var(--text-primary);
+}
+
 @media (max-width: 768px) {
   .hero h1 {
     font-size: 2.5rem;
@@ -392,5 +569,9 @@ nav {
   
   .card-grid {
     grid-template-columns: 1fr;
+  }
+
+  .finding-header {
+    flex-direction: column;
   }
 }
