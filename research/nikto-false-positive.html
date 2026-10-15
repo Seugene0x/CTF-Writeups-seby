@@ -30,6 +30,7 @@
           <span class="badge badge-cyan">Open Source</span>
           <span class="badge badge-gray">Nikto v2.6.1</span>
           <span class="badge badge-gray">False Positive</span>
+          <span class="badge badge-green">Fixed</span>
           <span class="badge badge-gray">2026</span>
         </div>
       </div>
@@ -88,6 +89,20 @@ server_version = "SimpleHTTP/" + __version__</pre>
         </ul>
         <div class="contact-links">
           <a href="https://github.com/sullo/nikto/issues/918" target="_blank" rel="noopener noreferrer" class="contact-btn">→ View the full issue (#918)</a>
+        </div>
+      </div>
+
+      <div class="writeup-section">
+        <h3>Resolution</h3>
+        <p>Nikto's maintainer (<a href="https://github.com/sullo" target="_blank" rel="noopener noreferrer">@sullo</a>, the repository owner) confirmed the bug the same day, labeled the issue as a bug, and closed it as completed:</p>
+        <blockquote class="output-block">"Interesting, thanks for pointing this out. I did some searching and can't find a product that matches with version 1.2 (though a similarly named client is version 1.2.0). I think this is just some noise in the DB. I've gone ahead and updated it in the pre-release branch for the next release (very soon)."</blockquote>
+        <p>That also answered the question in my report: no product actually matched the 1.2 version. The entry was noise in the database.</p>
+        <p>The fix changes entry 600720 to compare against 0.6, the label Python's server actually sends:</p>
+        <pre class="output-block">- "600720","SimpleHTTP/","1.2",...
++ "600720","SimpleHTTP/","0.6",...</pre>
+        <p>The change is on Nikto's <code>pre-release</code> branch and ships with the next release. Until then, the current release still shows the warning.</p>
+        <div class="contact-links">
+          <a href="https://github.com/sullo/nikto/commit/3df596a3c0cee073ebe7ff273b2f272643fd3f03" target="_blank" rel="noopener noreferrer" class="contact-btn">→ View the fix (3df596a)</a>
         </div>
       </div>
 
