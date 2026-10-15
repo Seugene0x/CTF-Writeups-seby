@@ -1,2 +1,6 @@
-/.git/*  /404  404!
-/.git    /404  404!
+/.git/*        /404.html  404!
+/.git          /404.html  404!
+/.claude/*     /404.html  404!
+/.DS_Store     /404.html  404!
+/README.md     /404.html  404!
+/netlify.toml  /404.html  404!

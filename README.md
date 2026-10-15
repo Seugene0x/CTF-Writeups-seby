@@ -6,7 +6,7 @@ A personal portfolio website showcasing security research, CTF writeups, and vul
 
 This website is designed to:
 
-- **Showcase CTF Writeups**: Detailed walkthroughs of Capture The Flag challenges from platforms like HackTheBox, TryHackMe, PicoCTF, and CTFtime. Each writeup includes reconnaissance, enumeration, exploitation, and post-exploitation steps with code examples and remediation advice.
+- **Showcase CTF Writeups**: Detailed walkthroughs of Capture The Flag challenges from HackTheBox and TryHackMe. Each writeup includes reconnaissance, enumeration, exploitation, and post-exploitation steps with code examples and remediation advice.
 
 - **Publish Security Research**: Vulnerability findings and security research disclosures with severity ratings, reproduction steps, proof-of-concept code, and fix verification. This demonstrates responsible disclosure practices and contributes to the security community.
 
@@ -17,7 +17,7 @@ This website is designed to:
 ## Key Features
 
 - **Dark Modern Design**: Clean, professional aesthetic optimized for security professionals with a dark theme and cyan accents
-- **Filterable Content**: CTF writeups can be filtered by platform (HackTheBox, TryHackMe, etc.) and difficulty (Easy to Insane)
+- **Filterable Content**: CTF writeups can be filtered by platform (HackTheBox, TryHackMe) and difficulty (Easy to Insane)
 - **Searchable Research**: Security findings can be filtered by severity (Critical to Low) and searched by keywords
 - **Responsive Layout**: Fully responsive design that works on desktop, tablet, and mobile devices
 - **Reusable Templates**: Standardized templates for CTF writeups and research disclosures ensure consistency
@@ -30,6 +30,7 @@ This website is designed to:
 - `ctf.html` - CTF writeups page with platform and difficulty filters
 - `research.html` - Security research findings with severity filters
 - `about.html` - About page with bio, skills, and contact links
+- `404.html` - Not-found page, also served for paths blocked in `_redirects`
 - `ctf/[name].html` - Individual CTF writeup pages
 - `research/[name].html` - Individual research writeup pages
 - `css/styles.css` - Global styles with dark modern design
