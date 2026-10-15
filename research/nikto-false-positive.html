@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nikto False Positive - seby0x.dev</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <nav>
+    <div class="container nav-content">
+      <a href="../index.html" class="brand">
+        <span class="sby">sby</span><span class="hex">0x</span>
+      </a>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../ctf.html">CTF</a>
+        <a href="../research.html" class="active">Research</a>
+        <a href="../about.html">About</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section">
+    <div class="container writeup-content">
+      <div class="writeup-header">
+        <h1 class="writeup-title">False Positive in Nikto — SimpleHTTP/0.6 Flagged as Outdated</h1>
+        <p class="writeup-subtitle">Open Source Contribution — Nikto Web Scanner</p>
+        <div class="writeup-meta">
+          <span class="badge badge-cyan">Open Source</span>
+          <span class="badge badge-gray">Nikto v2.6.1</span>
+          <span class="badge badge-gray">False Positive</span>
+          <span class="badge badge-gray">2026</span>
+        </div>
+      </div>
+
+      <div class="writeup-section">
+        <h3>What I Found</h3>
+        <p>While running Nikto against a local copy of a website I was assessing, I noticed this warning:</p>
+        <pre class="output-block">[600720] SimpleHTTP/0.6 appears to be outdated (current is at least 1.2)</pre>
+        <p>The target was Python's built-in HTTP server, which I was using only for local testing. The warning seemed wrong — I had just installed Python and knew it was recent. That made me question whether Nikto was actually detecting something real.</p>
+      </div>
+
+      <div class="writeup-section">
+        <h3>Why It's a False Positive</h3>
+        <p>Nikto maintains a database called <code>db_outdated</code> that maps software names to their expected current versions. When the version in a Server header is lower than the one in the database, it fires a warning.</p>
+        <p>The relevant entry in that database is:</p>
+        <pre class="output-block">"600720","SimpleHTTP/","1.2"</pre>
+        <p>Nikto reads <code>SimpleHTTP/</code> from the Server header, finds <code>0.6</code> after it, compares against <code>1.2</code>, and concludes the software is outdated.</p>
+        <p>The problem is that 0.6 is not a version number that changes when you update Python. It is a fixed label hardcoded directly into Python's source code:</p>
+        <pre class="output-block"># From cpython/Lib/http/server.py
+__version__ = "0.6"
+server_version = "SimpleHTTP/" + __version__</pre>
+        <p>This value has been the same in every Python release since 2.1 (2001):</p>
+        <ul>
+          <li>Python 2.1 through 2.7 send <code>SimpleHTTP/0.6</code></li>
+          <li>Python 3.0 through 3.14 send <code>SimpleHTTP/0.6</code></li>
+          <li>The older releases I could check used lower numbers: 0.3 in Python 1.5.2 and 0.5 in Python 2.0</li>
+        </ul>
+        <p>No Python release I checked, from 1.5.2 to 3.14, sends <code>SimpleHTTP/1.2</code>. The 1.2 version in Nikto's database most likely belongs to a different product that happens to share the SimpleHTTP name — but regardless, it will never match Python's server.</p>
+        <p>The result is that this warning fires on every Python HTTP server in every Python release so far, and upgrading Python doesn't clear it. It is a false positive by definition. Python's development branch drops the number and sends just <code>SimpleHTTP</code>, so future releases probably won't match this entry at all.</p>
+      </div>
+
+      <div class="writeup-section">
+        <h3>What Is Still Valid</h3>
+        <p>Not everything Nikto flagged here was wrong. Two things from the same scan are legitimate:</p>
+        <ol class="lessons-list">
+          <li><strong>Version disclosure.</strong> The Server header reveals exactly what software is running. That is a real finding regardless of whether the version comparison is accurate.</li>
+          <li><strong>Python version.</strong> The separate check [600652] flagging Python/3.13.9 as outdated is a fair question. Python 3.13 is still a supported release line, though, so the real question is whether 3.13.9 is the latest 3.13 patch, not whether 3.14 exists. That is a separate check from 600720 and is not part of this false positive.</li>
+        </ol>
+        <p>The false positive is specifically the SimpleHTTP version comparison, not the broader version disclosure finding.</p>
+      </div>
+
+      <div class="writeup-section">
+        <h3>How I Reported It</h3>
+        <p>After tracing the issue through both CPython's source code and Nikto's scanner database, I filed a bug report to the Nikto project on GitHub with:</p>
+        <ul>
+          <li>The scan output showing the false positive</li>
+          <li>The specific <code>db_outdated</code> entry causing it</li>
+          <li>Source references to both CPython and Nikto's database</li>
+          <li>A question asking which product the 1.2 version is actually intended to match</li>
+        </ul>
+        <p>The goal was not just to report the symptom but to give the maintainers enough information to either correct the database entry or add a more specific product name to avoid matching Python's server incorrectly.</p>
+        <p>Source references used in the report:</p>
+        <ul>
+          <li><a href="https://github.com/python/cpython/blob/3.13/Lib/http/server.py" target="_blank" rel="noopener noreferrer">cpython/Lib/http/server.py</a> (Python 3.13)</li>
+          <li><a href="https://github.com/sullo/nikto/blob/main/program/databases/db_outdated" target="_blank" rel="noopener noreferrer">nikto/program/databases/db_outdated</a> (entry 600720)</li>
+        </ul>
+        <div class="contact-links">
+          <a href="https://github.com/sullo/nikto/issues/918" target="_blank" rel="noopener noreferrer" class="contact-btn">→ View the full issue (#918)</a>
+        </div>
+      </div>
+
+      <div class="remediation-box">
+        <h4>Takeaway</h4>
+        <p>Running a scanner and copying its output is not a security assessment. Every finding needs to be validated against the actual target before being reported. In this case, questioning a result that seemed wrong led to identifying a bug in the tool itself — something that affects every security professional who runs Nikto against a Python server and trusts the output without verifying it.</p>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

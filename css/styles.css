@@ -166,6 +166,18 @@ nav {
   flex-wrap: wrap;
 }
 
+.card-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1.25rem;
+}
+
+.card-actions .contact-btn {
+  padding: 0.5rem 0.875rem;
+  font-size: 0.85rem;
+}
+
 .badge {
   display: inline-block;
   padding: 0.25rem 0.75rem;

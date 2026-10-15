@@ -1,6 +1,6 @@
 const searchBar = document.getElementById('searchBar');
 const researchGrid = document.getElementById('researchGrid');
-const severityFilters = document.querySelectorAll('[data-severity]');
+const severityFilters = document.querySelectorAll('.filter-btn[data-severity]');
 
 let currentSeverity = 'all';
 
@@ -30,3 +30,6 @@ function filterCards() {
     card.style.display = matchesSeverity && matchesSearch ? 'block' : 'none';
   });
 }
+
+const initialFilter = [...severityFilters].find(btn => btn.dataset.severity === location.hash.slice(1));
+if (initialFilter) initialFilter.click();

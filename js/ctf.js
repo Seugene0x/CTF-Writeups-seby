@@ -1,7 +1,7 @@
 const searchBar = document.getElementById('searchBar');
 const ctfGrid = document.getElementById('ctfGrid');
-const platformFilters = document.querySelectorAll('[data-filter]');
-const difficultyFilters = document.querySelectorAll('[data-difficulty]');
+const platformFilters = document.querySelectorAll('.filter-btn[data-filter]');
+const difficultyFilters = document.querySelectorAll('.filter-btn[data-difficulty]');
 
 let currentPlatform = 'all';
 let currentDifficulty = 'all';
